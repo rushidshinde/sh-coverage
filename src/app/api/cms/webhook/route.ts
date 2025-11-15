@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
                             // Rule 1: Filter out any inactive states from the linked result
                             idLinkedStates = idLinkedStates.filter(state => state.fieldData.active === "Yes");
 
-                            // Rule 2 is implied by the parent "if (requiresStateConfirmation == "Yes")" block
+                            // Rule 2 is implied by the parent if (requiresStateConfirmation == "Yes") block
                             finalSupportedStates = idLinkedStates;
                         }
                     } else {
