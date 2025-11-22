@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readCache, searchCacheByName, cacheExists, CmsItem, CacheData } from '@/lib/cache';
+import { fetchCmsData, CmsItem } from '@/lib/cms-data';
 
 /**
- * API Route: Search cached CMS items
+ * API Route: Search CMS items
  * GET /api/cms/search?q=search-term
  *
- * This endpoint searches the cached CMS data by item name from the persistent file cache.
+ * This endpoint fetches fresh data from Webflow CDN and searches by item name.
  * Query parameters:
  * - q: search query (searches in the 'name' field)
  * - limit: maximum number of results (optional, default: all)
@@ -13,39 +13,27 @@ import { readCache, searchCacheByName, cacheExists, CmsItem, CacheData } from '@
  */
 export async function GET(request: NextRequest) {
     try {
-        // Check if cache file exists
-        const exists = await cacheExists();
-        if (!exists) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Cache not initialized. Please call /api/cms/fetch first.',
-                },
-                { status: 404 }
-            );
-        }
-
-        // Read cache from file
-        const cache = await readCache();
-        if (!cache) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: 'Failed to read cache data from file.',
-                },
-                { status: 500 }
-            );
-        }
+        // Fetch fresh data from Webflow CDN
+        const cache = await fetchCmsData();
 
         // Get search parameters
         const searchParams = request.nextUrl.searchParams;
         const query = searchParams.get('q') || '';
-        const showAll = searchParams.get('showAll') === 'true';
         const limit = parseInt(searchParams.get('limit') || '0');
         const offset = parseInt(searchParams.get('offset') || '0');
 
         // Search items
-        let results: CmsItem[] = searchCacheByName(cache, query, showAll);
+        let results: CmsItem[] = [];
+
+        if (!query || query.trim() === '') {
+            results = [];
+        } else {
+            const searchTerm = query.toLowerCase().trim();
+            results = cache.coverageEntries.filter(item => {
+                const itemName = item.fieldData.name?.toLowerCase() || '';
+                return itemName.includes(searchTerm);
+            });
+        }
 
         // Apply pagination if specified
         const totalResults = results.length;
@@ -67,19 +55,15 @@ export async function GET(request: NextRequest) {
                     offset: offset,
                     returned: results.length,
                 },
-                cache: {
-                    lastUpdated: cache.lastUpdated,
-                    totalItemsInCache: cache.totalCoverageEntries,
-                },
             },
         });
     } catch (error) {
-        console.error('Error searching cache:', error);
+        console.error('Error searching CMS data:', error);
 
         return NextResponse.json(
             {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to search cache',
+                error: error instanceof Error ? error.message : 'Failed to search CMS data',
             },
             { status: 500 }
         );
