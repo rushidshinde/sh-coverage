@@ -21,13 +21,25 @@ export function isAllowedDomain(request: NextRequest): boolean {
     const referer = request.headers.get('referer');
     const requestUrl = request.url;
     
+    // Debug logging
+    console.log('=== Domain Validation Debug ===');
+    console.log('Request URL:', requestUrl);
+    console.log('Origin header:', origin);
+    console.log('Referer header:', referer);
+    console.log('Allowed domains:', ALLOWED_DOMAINS);
+    
     // Check the host of the request URL itself (for same-origin requests)
     // This handles cases like direct browser navigation where origin header is not sent
     try {
         const url = new URL(requestUrl);
         const requestHost = url.host.toLowerCase();
+        console.log('Request host:', requestHost);
         
-        if (ALLOWED_DOMAINS.some(domain => requestHost === domain.toLowerCase())) {
+        const isAllowed = ALLOWED_DOMAINS.some(domain => requestHost === domain.toLowerCase());
+        console.log('Request host allowed:', isAllowed);
+        
+        if (isAllowed) {
+            console.log('✅ Access granted via request host');
             return true;
         }
     } catch (error) {
@@ -39,8 +51,13 @@ export function isAllowedDomain(request: NextRequest): boolean {
         try {
             const url = new URL(origin);
             const host = url.host.toLowerCase();
+            console.log('Origin host:', host);
             
-            if (ALLOWED_DOMAINS.some(domain => host === domain.toLowerCase())) {
+            const isAllowed = ALLOWED_DOMAINS.some(domain => host === domain.toLowerCase());
+            console.log('Origin host allowed:', isAllowed);
+            
+            if (isAllowed) {
+                console.log('✅ Access granted via origin header');
                 return true;
             }
         } catch (error) {
@@ -53,8 +70,13 @@ export function isAllowedDomain(request: NextRequest): boolean {
         try {
             const url = new URL(referer);
             const host = url.host.toLowerCase();
+            console.log('Referer host:', host);
             
-            if (ALLOWED_DOMAINS.some(domain => host === domain.toLowerCase())) {
+            const isAllowed = ALLOWED_DOMAINS.some(domain => host === domain.toLowerCase());
+            console.log('Referer host allowed:', isAllowed);
+            
+            if (isAllowed) {
+                console.log('✅ Access granted via referer header');
                 return true;
             }
         } catch (error) {
@@ -62,6 +84,7 @@ export function isAllowedDomain(request: NextRequest): boolean {
         }
     }
 
+    console.log('❌ Access denied - no matching domain found');
     return false;
 }
 
