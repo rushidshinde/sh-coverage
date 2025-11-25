@@ -7,7 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const ALLOWED_DOMAINS = [    
     'localhost:3000',    
     '127.0.0.1:3000',
-    'rushikesh-shinde.webflow.io',    
+    'rushikesh-shinde.webflow.io',
+    'dd05188b-62e6-43d0-83df-bb0d7ddb567e.wf-app-prod.cosmic.webflow.services',
 ];
 
 /**
