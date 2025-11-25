@@ -6,9 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 const ALLOWED_DOMAINS = [    
     'localhost:3000',    
-    '127.0.0.1:3000',
+    '127.0.0.1:5500',
     'rushikesh-shinde.webflow.io',
-    'dd05188b-62e6-43d0-83df-bb0d7ddb567e.wf-app-prod.cosmic.webflow.services',
 ];
 
 /**
@@ -29,25 +28,8 @@ export function isAllowedDomain(request: NextRequest): boolean {
     console.log('Referer header:', referer);
     console.log('Allowed domains:', ALLOWED_DOMAINS);
     
-    // Check the host of the request URL itself (for same-origin requests)
-    // This handles cases like direct browser navigation where origin header is not sent
-    try {
-        const url = new URL(requestUrl);
-        const requestHost = url.host.toLowerCase();
-        console.log('Request host:', requestHost);
-        
-        const isAllowed = ALLOWED_DOMAINS.some(domain => requestHost === domain.toLowerCase());
-        console.log('Request host allowed:', isAllowed);
-        
-        if (isAllowed) {
-            console.log('✅ Access granted via request host');
-            return true;
-        }
-    } catch (error) {
-        console.error('Invalid request URL:', error);
-    }
-
-    // Check origin header (sent by browsers for fetch/CORS requests)
+    // Check origin header first (sent by browsers for fetch/CORS requests)
+    // This is the primary way to validate WHERE the request came from
     if (origin) {
         try {
             const url = new URL(origin);
@@ -60,13 +42,18 @@ export function isAllowedDomain(request: NextRequest): boolean {
             if (isAllowed) {
                 console.log('✅ Access granted via origin header');
                 return true;
+            } else {
+                console.log('❌ Origin not in allowed domains');
+                return false;
             }
         } catch (error) {
             console.error('Invalid origin URL:', error);
+            return false;
         }
     }
 
-    // Check referer as additional fallback
+    // Check referer header (sent for navigation requests)
+    // This validates WHERE the request came from when origin is not present
     if (referer) {
         try {
             const url = new URL(referer);
@@ -79,13 +66,41 @@ export function isAllowedDomain(request: NextRequest): boolean {
             if (isAllowed) {
                 console.log('✅ Access granted via referer header');
                 return true;
+            } else {
+                console.log('❌ Referer not in allowed domains');
+                return false;
             }
         } catch (error) {
             console.error('Invalid referer URL:', error);
+            return false;
         }
     }
+    
+    // Fallback: Check the request URL host for localhost development
+    // This allows direct API access during local development
+    try {
+        const url = new URL(requestUrl);
+        const requestHost = url.host.toLowerCase();
+        console.log('Request host:', requestHost);
+        
+        // Only allow localhost/127.0.0.1 for direct access without origin/referer
+        const isLocalhost = requestHost.startsWith('localhost') || 
+                           requestHost.startsWith('127.0.0.1');
+        
+        if (isLocalhost) {
+            const isAllowed = ALLOWED_DOMAINS.some(domain => requestHost === domain.toLowerCase());
+            console.log('Request host allowed (localhost):', isAllowed);
+            
+            if (isAllowed) {
+                console.log('✅ Access granted via localhost request host');
+                return true;
+            }
+        }
+    } catch (error) {
+        console.error('Invalid request URL:', error);
+    }
 
-    console.log('❌ Access denied - no matching domain found');
+    console.log('❌ Access denied - no valid origin or referer from allowed domains');
     return false;
 }
 
