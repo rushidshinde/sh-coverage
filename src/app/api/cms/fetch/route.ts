@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchCmsData } from '@/lib/cms-data';
+import { isAllowedDomain, createUnauthorizedResponse } from '@/lib/domain-validator';
 
 /**
  * API Route: Fetch CMS data from Webflow
@@ -9,6 +10,11 @@ import { fetchCmsData } from '@/lib/cms-data';
  * using the shared logic which hits the Webflow CDN API.
  */
 export async function GET(request: NextRequest) {
+    // Validate that the request is from an allowed domain
+    if (!isAllowedDomain(request)) {
+        return createUnauthorizedResponse();
+    }
+
     try {
         const data = await fetchCmsData();
 

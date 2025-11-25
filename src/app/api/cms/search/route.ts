@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchCmsData, CmsItem } from '@/lib/cms-data';
+import { isAllowedDomain, createUnauthorizedResponse } from '@/lib/domain-validator';
 
 /**
  * API Route: Search CMS items
@@ -12,6 +13,11 @@ import { fetchCmsData, CmsItem } from '@/lib/cms-data';
  * - offset: pagination offset (optional, default: 0)
  */
 export async function GET(request: NextRequest) {
+    // Validate that the request is from an allowed domain
+    if (!isAllowedDomain(request)) {
+        return createUnauthorizedResponse();
+    }
+
     try {
         // Fetch fresh data from Webflow CDN
         const cache = await fetchCmsData();
