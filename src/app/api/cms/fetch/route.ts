@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchCmsData } from '@/lib/cms-data';
-import { isAllowedDomain, createUnauthorizedResponse } from '@/lib/domain-validator';
+import { isAllowedDomain, createUnauthorizedResponse, getCorsHeaders } from '@/lib/domain-validator';
+
+/**
+ * Handle OPTIONS preflight requests for CORS
+ */
+export async function OPTIONS() {
+    return new NextResponse(null, {
+        status: 204,
+        headers: getCorsHeaders(),
+    });
+}
 
 /**
  * API Route: Fetch CMS data from Webflow
@@ -27,6 +37,8 @@ export async function GET(request: NextRequest) {
                 coverageEntries: data.coverageEntries,
                 coverageStateMap: data.coverageStateMap,
             },
+        }, {
+            headers: getCorsHeaders(),
         });
     } catch (error) {
         console.error('Error fetching CMS data:', error);
@@ -36,7 +48,10 @@ export async function GET(request: NextRequest) {
                 success: false,
                 error: error instanceof Error ? error.message : 'Failed to fetch CMS data',
             },
-            { status: 500 }
+            { 
+                status: 500,
+                headers: getCorsHeaders(),
+            }
         );
     }
 }

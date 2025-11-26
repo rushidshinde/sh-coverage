@@ -106,6 +106,19 @@ export function isAllowedDomain(request: NextRequest): boolean {
 }
 
 /**
+ * Creates CORS headers for API responses
+ * Allows all origins with wildcard (*)
+ */
+export function getCorsHeaders(): Record<string, string> {
+    return {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Max-Age': '86400', // 24 hours
+    };
+}
+
+/**
  * Returns a 403 Forbidden response for unauthorized domain access
  */
 export function createUnauthorizedResponse(): NextResponse {
@@ -118,6 +131,7 @@ export function createUnauthorizedResponse(): NextResponse {
             status: 403,
             headers: {
                 'Content-Type': 'application/json',
+                ...getCorsHeaders(),
             }
         }
     );

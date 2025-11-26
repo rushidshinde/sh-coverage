@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchCmsData, CmsItem } from '@/lib/cms-data';
-import { isAllowedDomain, createUnauthorizedResponse } from '@/lib/domain-validator';
+import { isAllowedDomain, createUnauthorizedResponse, getCorsHeaders } from '@/lib/domain-validator';
+
+/**
+ * Handle OPTIONS preflight requests for CORS
+ */
+export async function OPTIONS() {
+    return new NextResponse(null, {
+        status: 204,
+        headers: getCorsHeaders(),
+    });
+}
 
 /**
  * API Route: Search CMS items
@@ -62,6 +72,8 @@ export async function GET(request: NextRequest) {
                     returned: results.length,
                 },
             },
+        }, {
+            headers: getCorsHeaders(),
         });
     } catch (error) {
         console.error('Error searching CMS data:', error);
@@ -71,7 +83,10 @@ export async function GET(request: NextRequest) {
                 success: false,
                 error: error instanceof Error ? error.message : 'Failed to search CMS data',
             },
-            { status: 500 }
+            {
+                status: 500,
+                headers: getCorsHeaders(),
+            }
         );
     }
 }
