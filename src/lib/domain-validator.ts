@@ -8,6 +8,7 @@ const ALLOWED_DOMAINS = [
     'localhost:3000',    
     '127.0.0.1:5500',
     'rushikesh-shinde.webflow.io',
+    'rushidshinde.webflow.io',
 ];
 
 /**
