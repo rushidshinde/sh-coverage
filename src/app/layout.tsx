@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import Navigation from '@/components/Navigation';
 
 export const metadata: Metadata = {
     title: 'Springhealth Marketing Site APIs',
@@ -14,6 +15,7 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className="antialiased">
+        <Navigation />
         {children}
         </body>
         </html>
