@@ -4,17 +4,18 @@ This document contains example requests and responses for the API endpoints.
 
 ## 1. Fetch CMS Data
 
-Fetches all items from Webflow CMS via the CDN API.
+Fetches all items from the Springhealth marketing site content (stored in Webflow CMS) via the CDN API.
 
 ### Request
 
 ```bash
-GET /api/cms/fetch
+GET /api/cms/coverage-entries/fetch
 ```
 
 **cURL Example:**
+
 ```bash
-curl -X GET "http://localhost:3000/api/cms/fetch"
+curl -X GET "http://localhost:3000/api/cms/coverage-entries/fetch"
 ```
 
 ### Success Response
@@ -60,10 +61,11 @@ Search for items by name with optional pagination.
 ### Request
 
 ```bash
-GET /api/cms/search?q={query}&limit={limit}&offset={offset}
+GET /api/cms/coverage-entries/search?q={query}&limit={limit}&offset={offset}
 ```
 
 **Query Parameters:**
+
 - `q` (optional): Search term to match against item names
 - `limit` (optional): Maximum number of results
 - `offset` (optional): Pagination offset
@@ -71,18 +73,21 @@ GET /api/cms/search?q={query}&limit={limit}&offset={offset}
 ### Examples
 
 **Search without query (returns all items):**
+
 ```bash
-curl -X GET "http://localhost:3000/api/cms/search"
+curl -X GET "http://localhost:3000/api/cms/coverage-entries/search"
 ```
 
 **Search with query:**
+
 ```bash
-curl -X GET "http://localhost:3000/api/cms/search?q=product"
+curl -X GET "http://localhost:3000/api/cms/coverage-entries/search?q=product"
 ```
 
 **Search with pagination:**
+
 ```bash
-curl -X GET "http://localhost:3000/api/cms/search?q=product&limit=10&offset=0"
+curl -X GET "http://localhost:3000/api/cms/coverage-entries/search?q=product&limit=10&offset=0"
 ```
 
 ### Success Response
@@ -97,7 +102,7 @@ curl -X GET "http://localhost:3000/api/cms/search?q=product&limit=10&offset=0"
         "id": "5f8e2a3b4c5d6e7f8a9b0c1d",
         "fieldData": {
           "name": "Product Name",
-          "slug": "product-name",
+          "slug": "product-name"
           // ...
         }
       }
@@ -121,7 +126,7 @@ curl -X GET "http://localhost:3000/api/cms/search?q=product&limit=10&offset=0"
 ```typescript
 // Fetch all data
 async function fetchData() {
-  const response = await fetch('/api/cms/fetch');
+  const response = await fetch("/api/cms/coverage-entries/fetch");
   const data = await response.json();
   console.log(data);
 }
@@ -129,7 +134,9 @@ async function fetchData() {
 // Search items
 async function searchItems(query: string, limit = 10) {
   const response = await fetch(
-    `/api/cms/search?q=${encodeURIComponent(query)}&limit=${limit}`
+    `/api/cms/coverage-entries/search?q=${encodeURIComponent(
+      query
+    )}&limit=${limit}`
   );
   const data = await response.json();
   return data.data.results;
@@ -139,18 +146,18 @@ async function searchItems(query: string, limit = 10) {
 ### Using Axios
 
 ```typescript
-import axios from 'axios';
+import axios from "axios";
 
 // Fetch all data
 const fetchData = async () => {
-  const { data } = await axios.get('/api/cms/fetch');
+  const { data } = await axios.get("/api/cms/coverage-entries/fetch");
   return data;
 };
 
 // Search with parameters
 const searchItems = async (query?: string, limit?: number, offset?: number) => {
-  const { data } = await axios.get('/api/cms/search', {
-    params: { q: query, limit, offset }
+  const { data } = await axios.get("/api/cms/coverage-entries/search", {
+    params: { q: query, limit, offset },
   });
   return data.data.results;
 };

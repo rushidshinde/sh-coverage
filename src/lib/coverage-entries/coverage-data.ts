@@ -5,7 +5,7 @@ import {
     IS_INSURANCE_CENSUS_LESS_MAP,
     REQUIRE_STATE_MAP,
     REQUIRES_STATE_CONFIRMATION_MAP,
-} from "@/lib/cms-maps";
+} from "@/lib/coverage-entries/coverage-maps";
 
 export interface CoverageState {
     id: string;

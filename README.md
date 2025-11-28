@@ -1,6 +1,6 @@
-# Webflow CMS API
+# Springhealth Marketing Site APIs
 
-A Next.js application that provides a search API for Webflow CMS collections. This app fetches data directly from Webflow's CDN API (`api-cdn.webflow.com`), ensuring fast read access without the need for complex local caching infrastructure.
+A Next.js application that provides search and data APIs for Springhealth marketing site content. This app fetches data directly from Webflow's CDN API (`api-cdn.webflow.com`), ensuring fast read access without the need for complex local caching infrastructure.
 
 ## Features
 
@@ -34,7 +34,7 @@ npm install
 Create a `.env.local` file in the root directory:
 
 ```env
-# Webflow CMS Configuration
+# Springhealth Marketing Site Configuration (using Webflow CMS)
 WEBFLOW_SITE_ID=your_site_id_here
 WEBFLOW_COVERAGE_ENTRIES_COLLECTION_ID=your_entries_collection_id
 WEBFLOW_COVERAGE_STATES_COLLECTION_ID=your_states_collection_id
@@ -60,12 +60,13 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 ### 1. Fetch CMS Data
 
 ```
-GET /api/cms/fetch
+GET /api/cms/coverage-entries/fetch
 ```
 
-Fetches all items from your Webflow CMS collection via the CDN API.
+Fetches all marketing content items from the Webflow CMS collection via the CDN API.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -82,17 +83,19 @@ Fetches all items from your Webflow CMS collection via the CDN API.
 ### 2. Search Items
 
 ```
-GET /api/cms/search?q=query&limit=10&offset=0
+GET /api/cms/coverage-entries/search?q=query&limit=10&offset=0
 ```
 
 Search items by name with optional pagination. Fetches fresh data from CDN and filters in-memory.
 
 **Query Parameters:**
+
 - `q` (optional): Search query to match against item names
 - `limit` (optional): Maximum number of results to return
 - `offset` (optional): Pagination offset
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -116,27 +119,34 @@ src/
 ├── app/
 │   ├── api/
 │   │   └── cms/
-│   │       ├── fetch/route.ts       # Fetch endpoint
-│   │       └── search/route.ts      # Search endpoint
-│   ├── page.tsx                     # Home page
-│   ├── layout.tsx                   # Root layout
-│   └── globals.css                  # Global styles
-└── lib/
-    ├── webflow-client.ts            # Webflow API client
-    ├── cms-data.ts                  # Shared data fetching logic
-    └── cms-maps.ts                  # CMS field mappings
+│   │       └── coverage-entries/
+│   │           ├── fetch/route.ts       # Fetch coverage entries endpoint
+│   │           └── search/route.ts      # Search coverage entries endpoint
+│   ├── page.tsx                         # Home page
+│   ├── layout.tsx                       # Root layout
+│   └── globals.css                      # Global styles
+├── lib/
+│   ├── coverage-entries/
+│   │   ├── coverage-data.ts             # Coverage entries data fetching logic
+│   │   └── coverage-maps.ts             # Coverage field mappings
+│   ├── webflow-client.ts                # Webflow API client (shared)
+│   ├── domain-validator.ts              # Domain validation (shared)
+│   ├── base-url.ts                      # URL utilities (shared)
+│   └── utils.ts                         # General utilities (shared)
+└── components/
+    └── SearchInterface.tsx              # Search UI component
 ```
 
 ## Environment Variables Reference
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `WEBFLOW_SITE_ID` | Yes | Your Webflow site ID |
-| `WEBFLOW_COVERAGE_ENTRIES_COLLECTION_ID` | Yes | The main CMS collection ID |
-| `WEBFLOW_COVERAGE_STATES_COLLECTION_ID` | Yes | The states CMS collection ID |
-| `WEBFLOW_API_TOKEN` | Yes | Webflow API access token |
-| `WEBFLOW_API_HOST` | Yes | Set to `https://api-cdn.webflow.com` |
-| `NEXT_PUBLIC_BASE_PATH` | No | Base path for deployment |
+| Variable                                 | Required | Description                          |
+| ---------------------------------------- | -------- | ------------------------------------ |
+| `WEBFLOW_SITE_ID`                        | Yes      | Your Webflow site ID                 |
+| `WEBFLOW_COVERAGE_ENTRIES_COLLECTION_ID` | Yes      | The main CMS collection ID           |
+| `WEBFLOW_COVERAGE_STATES_COLLECTION_ID`  | Yes      | The states CMS collection ID         |
+| `WEBFLOW_API_TOKEN`                      | Yes      | Webflow API access token             |
+| `WEBFLOW_API_HOST`                       | Yes      | Set to `https://api-cdn.webflow.com` |
+| `NEXT_PUBLIC_BASE_PATH`                  | No       | Base path for deployment             |
 
 ## License
 

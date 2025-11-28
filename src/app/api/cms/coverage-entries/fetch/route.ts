@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchCmsData } from '@/lib/cms-data';
+import { fetchCmsData } from '@/lib/coverage-entries/coverage-data';
 import { isAllowedDomain, createUnauthorizedResponse, getCorsHeaders } from '@/lib/domain-validator';
 
 /**
@@ -13,10 +13,10 @@ export async function OPTIONS() {
 }
 
 /**
- * API Route: Fetch CMS data from Webflow
- * GET /api/cms/fetch
+ * API Route: Fetch Coverage Entries Data
+ * GET /api/cms/coverage-entries/fetch
  *
- * This endpoint fetches all items from the configured Webflow CMS collection
+ * This endpoint fetches all coverage entries from Webflow CMS
  * using the shared logic which hits the Webflow CDN API.
  */
 export async function GET(request: NextRequest) {

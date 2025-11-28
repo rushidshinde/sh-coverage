@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CmsItem } from '@/lib/cms-data';
+import { CmsItem } from '@/lib/coverage-entries/coverage-data';
 import { baseUrl } from '@/lib/base-url';
 
 export default function SearchInterface() {
@@ -21,7 +21,7 @@ export default function SearchInterface() {
             setError(null);
 
             try {
-                const response = await fetch(`${baseUrl}/api/cms/search?q=${encodeURIComponent(query)}`);
+                const response = await fetch(`${baseUrl}/api/cms/coverage-entries/search?q=${encodeURIComponent(query)}`);
                 const data = await response.json();
 
                 if (data.success) {

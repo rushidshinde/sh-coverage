@@ -8,10 +8,10 @@ export default function Home() {
                     {/* Header */}
                     <div className="text-center mb-12">
                         <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                            Webflow CMS Search
+                            Springhealth Marketing Site
                         </h1>
                         <p className="text-xl text-gray-300">
-                            Real-time search powered by Webflow CDN
+                            Search API for Springhealth marketing content
                         </p>
                     </div>
 

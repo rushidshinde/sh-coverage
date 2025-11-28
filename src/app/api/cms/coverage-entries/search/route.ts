@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchCmsData, CmsItem } from '@/lib/cms-data';
+import { fetchCmsData, CmsItem } from '@/lib/coverage-entries/coverage-data';
 import { isAllowedDomain, createUnauthorizedResponse, getCorsHeaders } from '@/lib/domain-validator';
 
 /**
@@ -13,8 +13,8 @@ export async function OPTIONS() {
 }
 
 /**
- * API Route: Search CMS items
- * GET /api/cms/search?q=search-term
+ * API Route: Search Coverage Entries
+ * GET /api/cms/coverage-entries/search?q=search-term
  *
  * This endpoint fetches fresh data from Webflow CDN and searches by item name.
  * Query parameters:
