@@ -50,3 +50,25 @@ export function getCoverageStatesCollectionId(): string {
     }
     return collectionId;
 }
+
+/**
+ * Get the configured Legal Docs collection ID from environment variables
+ */
+export function getLegalDocsCollectionId(): string {
+    const collectionId = process.env.WEBFLOW_LEGAL_DOCS_COLLECTION_ID;
+    if (!collectionId) {
+        throw new Error('WEBFLOW_LEGAL_DOCS_COLLECTION_ID environment variable is not set');
+    }
+    return collectionId;
+}
+
+/**
+ * Get the configured Legal Doc Languages collection ID from environment variables
+ */
+export function getLegalDocLanguagesCollectionId(): string {
+    const collectionId = process.env.WEBFLOW_LEGAL_DOC_LANGUAGES_COLLECTION_ID;
+    if (!collectionId) {
+        throw new Error('WEBFLOW_LEGAL_DOC_LANGUAGES_COLLECTION_ID environment variable is not set');
+    }
+    return collectionId;
+}

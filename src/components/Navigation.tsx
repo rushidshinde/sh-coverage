@@ -39,6 +39,16 @@ export default function Navigation() {
                         >
                             Coverage Entries
                         </Link>
+                        <Link
+                            href="/legal-docs"
+                            className={`px-4 py-2 rounded-lg transition-colors ${
+                                isActive('/legal-docs')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                            }`}
+                        >
+                            Legal Docs
+                        </Link>
                     </div>
                 </div>
             </div>

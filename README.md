@@ -110,7 +110,37 @@ Search items by name with optional pagination. Fetches fresh data from CDN and f
     }
   }
 }
+  }
+}
 ```
+
+### 3. Fetch Legal Documents
+
+```
+GET /api/cms/legal-docs/fetch?country=Global&docType=privacy-policy
+```
+
+Fetches legal documents filtered by country and document type.
+
+**Query Parameters:**
+
+- `country` (optional): Filter by country (default: "Global")
+- `docType` (optional): Document type (default: "privacy-policy")
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "totalLegalDocs": 1,
+    "legalDocs": [...]
+  }
+}
+```
+
+See [API_EXAMPLE_LEGAL_DOCS.md](./API_EXAMPLE_LEGAL_DOCS.md) for detailed examples.
+See [API_EXAMPLE_COVERAGE.md](./API_EXAMPLE_COVERAGE.md) for coverage API examples.
 
 ## Project Structure
 
@@ -122,6 +152,8 @@ src/
 │   │       └── coverage-entries/
 │   │           ├── fetch/route.ts       # Fetch coverage entries endpoint
 │   │           └── search/route.ts      # Search coverage entries endpoint
+│   │       └── legal-docs/
+│   │           └── fetch/route.ts       # Fetch legal docs endpoint
 │   ├── page.tsx                         # Home page
 │   ├── layout.tsx                       # Root layout
 │   └── globals.css                      # Global styles
@@ -129,6 +161,9 @@ src/
 │   ├── coverage-entries/
 │   │   ├── coverage-data.ts             # Coverage entries data fetching logic
 │   │   └── coverage-maps.ts             # Coverage field mappings
+│   ├── legal-docs/
+│   │   ├── legal-docs-data.ts           # Legal docs data fetching logic
+│   │   └── legal-docs-maps.ts           # Legal docs field mappings
 │   ├── webflow-client.ts                # Webflow API client (shared)
 │   ├── domain-validator.ts              # Domain validation (shared)
 │   ├── base-url.ts                      # URL utilities (shared)
@@ -136,18 +171,5 @@ src/
 └── components/
     └── SearchInterface.tsx              # Search UI component
 ```
-
-## Environment Variables Reference
-
-| Variable                                 | Required | Description                          |
-| ---------------------------------------- | -------- | ------------------------------------ |
-| `WEBFLOW_SITE_ID`                        | Yes      | Your Webflow site ID                 |
-| `WEBFLOW_COVERAGE_ENTRIES_COLLECTION_ID` | Yes      | The main CMS collection ID           |
-| `WEBFLOW_COVERAGE_STATES_COLLECTION_ID`  | Yes      | The states CMS collection ID         |
-| `WEBFLOW_API_TOKEN`                      | Yes      | Webflow API access token             |
-| `WEBFLOW_API_HOST`                       | Yes      | Set to `https://api-cdn.webflow.com` |
-| `NEXT_PUBLIC_BASE_PATH`                  | No       | Base path for deployment             |
-
-## License
 
 MIT
