@@ -16,6 +16,7 @@ GET /api/cms/legal-docs/fetch?country={country}&docType={docType}
 
 - `country` (optional): Filter by country (default: "Global"). Options: "Global", "United States".
 - `docType` (optional): Document type to fetch (default: "privacy-policy"). Options: "privacy-policy", "informed-minor-consent-policy", "terms-of-services".
+- `excludeByLanguages` (optional): Comma-separated list of language codes to exclude (e.g., "en,fr").
 
 ### Examples
 
@@ -29,6 +30,12 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
 
 ```bash
 curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=United%20States&docType=terms-of-services"
+```
+
+**Fetch Global Privacy Policy excluding English and French:**
+
+```bash
+curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docType=privacy-policy&excludeByLanguages=en,fr"
 ```
 
 ### Success Response
@@ -120,6 +127,15 @@ async function fetchPrivacyPolicy() {
 async function fetchTerms() {
   const response = await fetch(
     "/api/cms/legal-docs/fetch?country=United%20States&docType=terms-of-services"
+  );
+  const data = await response.json();
+  console.log(data);
+}
+
+// Fetch Privacy Policy excluding specific languages
+async function fetchPrivacyPolicyExcluded() {
+  const response = await fetch(
+    "/api/cms/legal-docs/fetch?country=Global&docType=privacy-policy&excludeByLanguages=en,fr"
   );
   const data = await response.json();
   console.log(data);

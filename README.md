@@ -126,6 +126,7 @@ Fetches legal documents filtered by country and document type.
 
 - `country` (optional): Filter by country (default: "Global")
 - `docType` (optional): Document type (default: "privacy-policy")
+- `excludeByLanguages` (optional): Exclude languages by code (e.g. "en,fr")
 
 **Response:**
 

@@ -39,10 +39,11 @@ export type DocType = 'privacy-policy' | 'informed-minor-consent-policy' | 'term
 export interface FetchOptions {
     country?: string; // Default: "Global"
     docType?: DocType; // Default: "privacy-policy"
+    excludeByLanguages?: string; // Comma separated language codes to exclude
 }
 
 export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<LegalDocsData> {
-    const { country = 'Global', docType = 'privacy-policy' } = options;
+    const { country = 'Global', docType = 'privacy-policy', excludeByLanguages } = options;
     
     const client = getWebflowClient();
     const legalDocsCollectionId = getLegalDocsCollectionId();
@@ -50,7 +51,7 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
 
     console.log(`Fetching items from legal docs collection: ${legalDocsCollectionId}`);
     console.log(`Fetching items from languages collection: ${languagesCollectionId}`);
-    console.log(`Filter - Country: ${country}, Doc Type: ${docType}`);
+    console.log(`Filter - Country: ${country}, Doc Type: ${docType}, Exclude Languages: ${excludeByLanguages}`);
 
     // Fetch languages first
     const allLanguages: Language[] = [];
@@ -160,6 +161,22 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
     filteredDocs = filteredDocs.filter(doc => {
         return doc.fieldData.country === country;
     });
+
+    // Filter by excluded languages
+    if (excludeByLanguages) {
+        const excludedCodes = excludeByLanguages.split(',').map(code => code.trim().toLowerCase());
+        if (excludedCodes.length > 0) {
+            filteredDocs = filteredDocs.filter(doc => {
+                const docLangCode = doc.fieldData.language?.fieldData['language-code']?.toLowerCase();
+                // If doc has no language, keep it (or decide behavior, assuming keep for now unless it strictly must match a language)
+                // If doc has language, check if it is in excluded list
+                if (docLangCode) {
+                    return !excludedCodes.includes(docLangCode);
+                }
+                return true; 
+            });
+        }
+    }
 
     // Map to selective fields based on docType
     const mappedDocs = filteredDocs.map(doc => {
