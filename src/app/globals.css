@@ -2,26 +2,147 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --background: #ffffff;
-    --foreground: #171717;
+@layer base {
+  :root {
+    /* Light mint green background - #f3fff5 */
+    --background: 130 100% 97.6%;
+    --foreground: 167 96.5% 11.2%;
+    
+    /* Card with subtle mint tint */
+    --card: 0 0% 100%;
+    --card-foreground: 167 96.5% 11.2%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 167 96.5% 11.2%;
+    
+    /* Primary dark teal green - #01382e */
+    --primary: 167 96.5% 11.2%;
+    --primary-foreground: 130 100% 97.6%;
+    
+    /* Secondary with light mint accent */
+    --secondary: 130 60% 95%;
+    --secondary-foreground: 167 96.5% 11.2%;
+    
+    /* Muted with mint tint */
+    --muted: 130 60% 95%;
+    --muted-foreground: 167 50% 35%;
+    
+    /* Accent colors with green theme */
+    --accent: 130 60% 95%;
+    --accent-foreground: 167 96.5% 11.2%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    
+    /* Borders with subtle green tint */
+    --border: 130 40% 88%;
+    --input: 130 40% 88%;
+    
+    /* Ring using primary color */
+    --ring: 167 96.5% 11.2%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark mode with deep teal background */
+    --background: 167 70% 8%;
+    --foreground: 130 100% 97.6%;
+    
+    --card: 167 60% 10%;
+    --card-foreground: 130 100% 97.6%;
+    
+    --popover: 167 60% 10%;
+    --popover-foreground: 130 100% 97.6%;
+    
+    /* Primary lighter in dark mode */
+    --primary: 130 80% 85%;
+    --primary-foreground: 167 96.5% 11.2%;
+    
+    --secondary: 167 50% 15%;
+    --secondary-foreground: 130 100% 97.6%;
+    
+    --muted: 167 50% 15%;
+    --muted-foreground: 130 60% 70%;
+    
+    --accent: 167 50% 15%;
+    --accent-foreground: 130 100% 97.6%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --border: 167 50% 15%;
+    --input: 167 50% 15%;
+    --ring: 130 80% 85%;
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
 
-body {
-    color: var(--foreground);
-    background: var(--background);
-    font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* JSON Syntax Highlighting */
+  .language-json {
+    color: hsl(var(--foreground));
+  }
+  
+  .language-json .token.property {
+    color: hsl(221.2 83.2% 53.3%);
+  }
+  
+  .language-json .token.string {
+    color: hsl(142.1 76.2% 36.3%);
+  }
+  
+  .language-json .token.number {
+    color: hsl(262.1 83.3% 57.8%);
+  }
+  
+  .language-json .token.boolean {
+    color: hsl(346.8 77.2% 49.8%);
+  }
+  
+  .language-json .token.null {
+    color: hsl(215.4 16.3% 46.9%);
+  }
 }
 
 @layer utilities {
-    .text-balance {
-        text-wrap: balance;
-    }
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Smooth scrolling */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom shadows */
+  .shadow-xs {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
 }
