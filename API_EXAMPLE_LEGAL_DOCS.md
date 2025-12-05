@@ -45,7 +45,12 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
 ```json
 {
   "success": true,
-  "message": "Successfully fetched 1 legal documents.",
+  "message": "Successfully fetched 1 legal documents for country \"Global\" and doc-type \"privacy-policy\".",
+  "filters": {
+    "country": "Global",
+    "docType": "privacy-policy",
+    "excludeByLanguages": undefined
+  },
   "data": {
     "totalLegalDocs": 1,
     "legalDocs": [
@@ -78,7 +83,12 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
 ```json
 {
   "success": true,
-  "message": "Successfully fetched 1 legal documents.",
+  "message": "Successfully fetched 1 legal documents for country \"United States\" and doc-type \"terms-of-services\".",
+  "filters": {
+    "country": "United States",
+    "docType": "terms-of-services",
+    "excludeByLanguages": undefined
+  },
   "data": {
     "totalLegalDocs": 1,
     "legalDocs": [
@@ -140,4 +150,30 @@ async function fetchPrivacyPolicyExcluded() {
   const data = await response.json();
   console.log(data);
 }
+```
+
+### Using Axios
+
+```typescript
+import axios from "axios";
+
+// Fetch Privacy Policy
+const fetchPrivacyPolicy = async () => {
+  const { data } = await axios.get("/api/cms/legal-docs/fetch", {
+    params: { country: "Global", docType: "privacy-policy" },
+  });
+  return data;
+};
+
+// Fetch with excluded languages
+const fetchWithExclusions = async () => {
+  const { data } = await axios.get("/api/cms/legal-docs/fetch", {
+    params: {
+      country: "Global",
+      docType: "privacy-policy",
+      excludeByLanguages: "en,fr",
+    },
+  });
+  return data;
+};
 ```
