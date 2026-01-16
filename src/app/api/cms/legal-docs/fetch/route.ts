@@ -64,7 +64,8 @@ export async function GET(request: NextRequest) {
             },
             data: {
                 totalLegalDocs: data.totalLegalDocs,                
-                legalDocs: data.legalDocs,                
+                legalDocs: data.legalDocs,
+                lastUpdated: data.lastUpdated,             
             },
         }, {
             headers: getCorsHeaders(),

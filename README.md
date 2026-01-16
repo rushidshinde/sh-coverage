@@ -166,6 +166,7 @@ Fetches legal documents filtered by country and document type.
   },
   "data": {
     "totalLegalDocs": 1,
+    "lastUpdated": "2024-03-15T10:00:00Z",
     "legalDocs": [...]
   }
 }

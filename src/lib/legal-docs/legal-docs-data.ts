@@ -32,6 +32,7 @@ export interface LegalDocItem {
 export interface LegalDocsData {
     legalDocs: LegalDocItem[];
     totalLegalDocs: number;
+    lastUpdated?: string;
 }
 
 export type DocType = 'privacy-policy' | 'informed-minor-consent-policy' | 'terms-of-services';
@@ -103,6 +104,7 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
     let offset = 0;
     const limit = 100;
     let hasMore = true;
+    let latestLastUpdated: string | undefined = undefined;
 
     while (hasMore) {
         const response = await client.collections.items.listItemsLive(legalDocsCollectionId, {
@@ -114,6 +116,13 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
 
         if (response.items && response.items.length > 0) {
             const items: LegalDocItem[] = response.items.map((item: any) => {
+                // Updates the latestLastUpdated date if the current item's date is more recent
+                if (item.lastUpdated) {
+                   if (!latestLastUpdated || new Date(item.lastUpdated) > new Date(latestLastUpdated)) {
+                       latestLastUpdated = item.lastUpdated;
+                   }
+                }
+
                 const countryId = item.fieldData.country as string;
                 const languageId = item.fieldData.language as string;
 
@@ -220,5 +229,6 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
     return {
         legalDocs: mappedDocs,
         totalLegalDocs: mappedDocs.length,
+        lastUpdated: latestLastUpdated,
     };
 }

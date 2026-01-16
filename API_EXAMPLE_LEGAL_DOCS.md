@@ -53,6 +53,7 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
   },
   "data": {
     "totalLegalDocs": 1,
+    "lastUpdated": "2024-01-01T00:00:00.000Z",
     "legalDocs": [
       {
         "id": "6749...",
@@ -91,6 +92,7 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
   },
   "data": {
     "totalLegalDocs": 1,
+    "lastUpdated": "2024-01-01T00:00:00.000Z",
     "legalDocs": [
       {
         "id": "6749...",
