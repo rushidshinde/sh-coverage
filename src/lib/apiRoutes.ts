@@ -115,25 +115,12 @@ export const apiRoutes: ApiRoute[] = [
   {
     id: 'legal-docs-fetch',
     name: 'Legal Documents - Fetch',
-    description: 'Fetch legal documents filtered by country and document type',
+    description: 'Fetch legal documents filtered by document type',
     method: 'GET',
     path: '/api/cms/legal-docs/fetch',
     slug: 'legal-docs-fetch',
     category: 'Legal Documents',
     params: [
-      {
-        name: 'country',
-        type: 'select',
-        label: 'Country',
-        description: 'Filter documents by country',
-        required: false,
-        defaultValue: 'Global',
-        options: [
-          { value: 'Global', label: 'Global' },
-          { value: 'United States', label: 'United States' }
-        ],
-        example: 'Global'
-      },
       {
         name: 'docType',
         type: 'select',
@@ -163,7 +150,6 @@ export const apiRoutes: ApiRoute[] = [
       success: true,
       message: 'Successfully fetched legal documents',
       filters: {
-        country: 'Global',
         docType: 'privacy-policy',
         excludeByLanguages: undefined
       },

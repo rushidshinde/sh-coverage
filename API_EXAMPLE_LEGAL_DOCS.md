@@ -9,33 +9,32 @@ Fetches legal documents from Webflow CMS, filtered by country and document type.
 ### Request
 
 ```bash
-GET /api/cms/legal-docs/fetch?country={country}&docType={docType}
+GET /api/cms/legal-docs/fetch?docType={docType}
 ```
 
 **Query Parameters:**
 
-- `country` (optional): Filter by country (default: "Global"). Options: "Global", "United States".
 - `docType` (optional): Document type to fetch (default: "privacy-policy"). Options: "privacy-policy", "informed-minor-consent-policy", "terms-of-services".
 - `excludeByLanguages` (optional): Comma-separated list of language codes to exclude (e.g., "en,fr").
 
 ### Examples
 
-**Fetch Global Privacy Policy:**
+**Fetch Privacy Policy:**
 
 ```bash
-curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docType=privacy-policy"
+curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?docType=privacy-policy"
 ```
 
-**Fetch US Terms of Services:**
+**Fetch Terms of Services:**
 
 ```bash
-curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=United%20States&docType=terms-of-services"
+curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?docType=terms-of-services"
 ```
 
-**Fetch Global Privacy Policy excluding English and French:**
+**Fetch Privacy Policy excluding English and French:**
 
 ```bash
-curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docType=privacy-policy&excludeByLanguages=en,fr"
+curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?docType=privacy-policy&excludeByLanguages=en,fr"
 ```
 
 ### Success Response
@@ -45,9 +44,8 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
 ```json
 {
   "success": true,
-  "message": "Successfully fetched 1 legal documents for country \"Global\" and doc-type \"privacy-policy\".",
+  "message": "Successfully fetched 1 legal documents for doc-type \"privacy-policy\".",
   "filters": {
-    "country": "Global",
     "docType": "privacy-policy",
     "excludeByLanguages": undefined
   },
@@ -60,7 +58,6 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
         "fieldData": {
           "name": "Privacy Policy - Global",
           "slug": "privacy-policy-global",
-          "country": "Global",
           "language": {
             "id": "...",
             "fieldData": {
@@ -84,9 +81,8 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
 ```json
 {
   "success": true,
-  "message": "Successfully fetched 1 legal documents for country \"United States\" and doc-type \"terms-of-services\".",
+  "message": "Successfully fetched 1 legal documents for doc-type \"terms-of-services\".",
   "filters": {
-    "country": "United States",
     "docType": "terms-of-services",
     "excludeByLanguages": undefined
   },
@@ -99,7 +95,6 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
         "fieldData": {
           "name": "Terms of Services - US",
           "slug": "terms-of-services-us",
-          "country": "United States",
           "language": { ... },
           "terms-of-services": "<p>Terms Content...</p>",
           "last-updated-date-terms-of-services": "2024-01-01T00:00:00.000Z"
@@ -129,7 +124,7 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?country=Global&docTy
 // Fetch Privacy Policy
 async function fetchPrivacyPolicy() {
   const response = await fetch(
-    "/api/cms/legal-docs/fetch?country=Global&docType=privacy-policy"
+    "/api/cms/legal-docs/fetch?docType=privacy-policy",
   );
   const data = await response.json();
   console.log(data);
@@ -138,7 +133,7 @@ async function fetchPrivacyPolicy() {
 // Fetch Terms of Services
 async function fetchTerms() {
   const response = await fetch(
-    "/api/cms/legal-docs/fetch?country=United%20States&docType=terms-of-services"
+    "/api/cms/legal-docs/fetch?docType=terms-of-services",
   );
   const data = await response.json();
   console.log(data);
@@ -147,7 +142,7 @@ async function fetchTerms() {
 // Fetch Privacy Policy excluding specific languages
 async function fetchPrivacyPolicyExcluded() {
   const response = await fetch(
-    "/api/cms/legal-docs/fetch?country=Global&docType=privacy-policy&excludeByLanguages=en,fr"
+    "/api/cms/legal-docs/fetch?docType=privacy-policy&excludeByLanguages=en,fr",
   );
   const data = await response.json();
   console.log(data);
@@ -162,7 +157,7 @@ import axios from "axios";
 // Fetch Privacy Policy
 const fetchPrivacyPolicy = async () => {
   const { data } = await axios.get("/api/cms/legal-docs/fetch", {
-    params: { country: "Global", docType: "privacy-policy" },
+    params: { docType: "privacy-policy" },
   });
   return data;
 };
@@ -171,7 +166,6 @@ const fetchPrivacyPolicy = async () => {
 const fetchWithExclusions = async () => {
   const { data } = await axios.get("/api/cms/legal-docs/fetch", {
     params: {
-      country: "Global",
       docType: "privacy-policy",
       excludeByLanguages: "en,fr",
     },

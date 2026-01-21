@@ -14,15 +14,14 @@ export async function OPTIONS() {
 
 /**
  * API Route: Fetch Legal Documents
- * GET /api/cms/legal-docs/fetch?country=Global&docType=privacy-policy
+ * GET /api/cms/legal-docs/fetch?docType=privacy-policy
  *
  * Query Parameters:
- * - country: Filter by country (default: "Global", options: "Global", "United States")
  * - docType: Document type to fetch (default: "privacy-policy")
  *   Options: "privacy-policy", "informed-minor-consent-policy", "terms-of-services"
  * - excludeByLanguages: Comma separated language codes to exclude (e.g. "en,fr")
  *
- * This endpoint fetches legal documents from Webflow CMS filtered by country and document type.
+ * This endpoint fetches legal documents from Webflow CMS filtered by document type.
  */
 export async function GET(request: NextRequest) {
     // Validate that the request is from an allowed domain
@@ -33,7 +32,6 @@ export async function GET(request: NextRequest) {
     try {
         // Get query parameters
         const searchParams = request.nextUrl.searchParams;
-        const country = searchParams.get('country') || 'Global';
         const docType = (searchParams.get('docType') || 'privacy-policy') as DocType;
         const excludeByLanguages = searchParams.get('excludeByLanguages') || undefined;
 
@@ -52,13 +50,12 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        const data = await fetchLegalDocsData({ country, docType, excludeByLanguages });
+        const data = await fetchLegalDocsData({ docType, excludeByLanguages });
 
         return NextResponse.json({
             success: true,
-            message: `Successfully fetched ${data.totalLegalDocs} legal documents for country "${country}" and doc-type "${docType}".`,
+            message: `Successfully fetched ${data.totalLegalDocs} legal documents for doc-type "${docType}".`,
             filters: {
-                country,
                 docType,
                 excludeByLanguages,
             },

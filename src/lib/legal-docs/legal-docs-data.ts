@@ -1,5 +1,5 @@
 import { getWebflowClient, getLegalDocsCollectionId, getLegalDocLanguagesCollectionId } from '@/lib/webflow-client';
-import { COUNTRY_MAP, TEXT_DIRECTION_MAP } from '@/lib/legal-docs/legal-docs-maps';
+import { TEXT_DIRECTION_MAP } from '@/lib/legal-docs/legal-docs-maps';
 
 export interface Language {
     id: string;
@@ -16,7 +16,6 @@ export interface LegalDocItem {
     fieldData: {
         name: string;
         slug: string;
-        country?: string; // Mapped value from COUNTRY_MAP
         language?: Language; // Populated language object
         body?: string; // HTML content (privacy-policy) - kept for internal use
         'privacy-policy'?: string; // Mapped key for response
@@ -38,13 +37,12 @@ export interface LegalDocsData {
 export type DocType = 'privacy-policy' | 'informed-minor-consent-policy' | 'terms-of-services';
 
 export interface FetchOptions {
-    country?: string; // Default: "Global"
     docType?: DocType; // Default: "privacy-policy"
     excludeByLanguages?: string; // Comma separated language codes to exclude
 }
 
 export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<LegalDocsData> {
-    const { country = 'Global', docType = 'privacy-policy', excludeByLanguages } = options;
+    const { docType = 'privacy-policy', excludeByLanguages } = options;
     
     const client = getWebflowClient();
     const legalDocsCollectionId = getLegalDocsCollectionId();
@@ -52,7 +50,7 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
 
     console.log(`Fetching items from legal docs collection: ${legalDocsCollectionId}`);
     console.log(`Fetching items from languages collection: ${languagesCollectionId}`);
-    console.log(`Filter - Country: ${country}, Doc Type: ${docType}, Exclude Languages: ${excludeByLanguages}`);
+    console.log(`Filter - Doc Type: ${docType}, Exclude Languages: ${excludeByLanguages}`);
 
     // Fetch languages first
     const allLanguages: Language[] = [];
@@ -123,7 +121,6 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
                    }
                 }
 
-                const countryId = item.fieldData.country as string;
                 const languageId = item.fieldData.language as string;
 
                 return {
@@ -131,7 +128,6 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
                     fieldData: {
                         name: item.fieldData.name,
                         slug: item.fieldData.slug,
-                        country: countryId ? (COUNTRY_MAP[countryId] || countryId) : undefined,
                         language: languageId && languageMap[languageId] ? languageMap[languageId] : undefined,
                         body: item.fieldData.body,
                         'informed-minor-consent-policy': item.fieldData['informed-minor-consent-policy'],
@@ -166,11 +162,6 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
     // Apply filters
     let filteredDocs = allLegalDocs;
 
-    // Filter by country
-    filteredDocs = filteredDocs.filter(doc => {
-        return doc.fieldData.country === country;
-    });
-
     // Filter by excluded languages
     if (excludeByLanguages) {
         const excludedCodes = excludeByLanguages.split(',').map(code => code.trim().toLowerCase());
@@ -192,7 +183,6 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
         const baseData = {
             name: doc.fieldData.name,
             slug: doc.fieldData.slug,
-            country: doc.fieldData.country,
             language: doc.fieldData.language,
         };
 
@@ -224,7 +214,7 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
         } as LegalDocItem;
     });
 
-    console.log(`After filtering and mapping: ${mappedDocs.length} legal documents (Country: ${country}, Doc Type: ${docType}).`);
+    console.log(`After filtering and mapping: ${mappedDocs.length} legal documents (Doc Type: ${docType}).`);
 
     return {
         legalDocs: mappedDocs,
