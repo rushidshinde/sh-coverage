@@ -142,15 +142,15 @@ Search coverage entries by name with optional pagination. Fetches fresh data fro
 ### 3. Legal Documents - Fetch
 
 ```
-GET /api/cms/legal-docs/fetch?country=Global&docType=privacy-policy
+GET /api/cms/legal-docs/fetch?docType=privacy-policy
 ```
 
-Fetches legal documents filtered by country and document type.
+Fetches legal documents filtered by document type.
 
 **Query Parameters:**
 
-- `country` (optional): Filter by country (default: "Global")
-- `docType` (optional): Document type - "privacy-policy", "informed-minor-consent-policy", or "terms-of-services" (default: "privacy-policy")
+- `docType` (optional): Document type (default: "privacy-policy")
+  - Options: "privacy-policy", "informed-minor-consent-policy", "terms-of-services", "informed-consent-policy", "coppa-notice", "hipaa-joint-notice", "consent-to-qhin"
 - `excludeByLanguages` (optional): Comma-separated language codes to exclude (e.g., "en,fr")
 
 **Response:**
@@ -160,14 +160,24 @@ Fetches legal documents filtered by country and document type.
   "success": true,
   "message": "Successfully fetched 1 legal documents.",
   "filters": {
-    "country": "Global",
     "docType": "privacy-policy",
     "excludeByLanguages": undefined
   },
   "data": {
     "totalLegalDocs": 1,
     "lastUpdated": "2024-03-15T10:00:00Z",
-    "legalDocs": [...]
+    "legalDocs": [
+      {
+        "id": "...",
+        "fieldData": {
+          "name": "Privacy Policy - Global",
+          "slug": "privacy-policy-global",
+          "language": { ... },
+          "legal-doc": "<p>Content...</p>",
+          "last-updated-date": "2024-03-15T10:00:00Z"
+        }
+      }
+    ]
   }
 }
 ```

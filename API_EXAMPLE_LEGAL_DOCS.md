@@ -4,7 +4,7 @@ This document contains example requests and responses for the Legal Docs API end
 
 ## 1. Fetch Legal Documents
 
-Fetches legal documents from Webflow CMS, filtered by country and document type.
+Fetches legal documents from Webflow CMS, filtered by document type.
 
 ### Request
 
@@ -14,7 +14,15 @@ GET /api/cms/legal-docs/fetch?docType={docType}
 
 **Query Parameters:**
 
-- `docType` (optional): Document type to fetch (default: "privacy-policy"). Options: "privacy-policy", "informed-minor-consent-policy", "terms-of-services".
+- `docType` (optional): Document type to fetch (default: "privacy-policy").
+  - Options:
+    - "privacy-policy"
+    - "informed-minor-consent-policy"
+    - "terms-of-services"
+    - "informed-consent-policy"
+    - "coppa-notice"
+    - "hipaa-joint-notice"
+    - "consent-to-qhin"
 - `excludeByLanguages` (optional): Comma-separated list of language codes to exclude (e.g., "en,fr").
 
 ### Examples
@@ -67,8 +75,8 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?docType=privacy-poli
               "text-direction": "LTR"
             }
           },
-          "privacy-policy": "<p>Privacy Policy Content...</p>",
-          "last-updated-date-privacy-policy": "2024-01-01T00:00:00.000Z"
+          "legal-doc": "<p>Privacy Policy Content...</p>",
+          "last-updated-date": "2024-01-01T00:00:00.000Z"
         }
       }
     ]
@@ -96,8 +104,8 @@ curl -X GET "http://localhost:3000/api/cms/legal-docs/fetch?docType=privacy-poli
           "name": "Terms of Services - US",
           "slug": "terms-of-services-us",
           "language": { ... },
-          "terms-of-services": "<p>Terms Content...</p>",
-          "last-updated-date-terms-of-services": "2024-01-01T00:00:00.000Z"
+          "legal-doc": "<p>Terms Content...</p>",
+          "last-updated-date": "2024-01-01T00:00:00.000Z"
         }
       }
     ]
