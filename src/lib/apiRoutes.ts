@@ -131,7 +131,11 @@ export const apiRoutes: ApiRoute[] = [
         options: [
           { value: 'privacy-policy', label: 'Privacy Policy' },
           { value: 'informed-minor-consent-policy', label: 'Informed Minor Consent Policy' },
-          { value: 'terms-of-services', label: 'Terms of Services' }
+          { value: 'terms-of-services', label: 'Terms of Services' },
+          { value: 'informed-consent-policy', label: 'Informed Consent Policy' },
+          { value: 'coppa-notice', label: 'COPPA Notice' },
+          { value: 'hipaa-joint-notice', label: 'HIPAA Joint Notice' },
+          { value: 'consent-to-qhin', label: 'Consent to QHIN' }
         ],
         example: 'privacy-policy'
       },

@@ -24,6 +24,16 @@ export interface LegalDocItem {
         'last-updated-date-terms-of-services'?: string;
         'last-updated-date-informed-minor-consent'?: string;
         'last-updated-date-privacy-policy'?: string;
+        'informed-consent-policy'?: string;
+        'last-updated-date-informed-consent'?: string;
+        'coppa-notice'?: string;
+        'last-updated-date-coppa-notice'?: string;
+        'hipaa-joint-notice'?: string;
+        'last-updated-date-hipaa-joint-notice'?: string;
+        'consent-to-qhin'?: string;
+        'last-updated-date-consent-to-qhin'?: string;
+        'legal-doc'?: string;
+        'last-updated-date'?: string;
         [key: string]: any; // Allow additional dynamic fields
     };
 }
@@ -34,7 +44,7 @@ export interface LegalDocsData {
     lastUpdated?: string;
 }
 
-export type DocType = 'privacy-policy' | 'informed-minor-consent-policy' | 'terms-of-services';
+export type DocType = 'privacy-policy' | 'informed-minor-consent-policy' | 'terms-of-services' | 'informed-consent-policy' | 'coppa-notice' | 'hipaa-joint-notice' | 'consent-to-qhin';
 
 export interface FetchOptions {
     docType?: DocType; // Default: "privacy-policy"
@@ -135,9 +145,17 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
                         'last-updated-date-terms-of-services': item.fieldData['last-updated-date-terms-of-services'],
                         'last-updated-date-informed-minor-consent': item.fieldData['last-updated-date-informed-minor-consent'],
                         'last-updated-date-privacy-policy': item.fieldData['last-updated-date-privacy-policy'],
+                        'informed-consent-policy': item.fieldData['informed-consent-policy'],
+                        'last-updated-date-informed-consent': item.fieldData['last-updated-date-informed-consent'],
+                        'coppa-notice': item.fieldData['coppa-notice'],
+                        'last-updated-date-coppa-notice': item.fieldData['last-updated-date-coppa-notice'],
+                        'hipaa-joint-notice': item.fieldData['hipaa-joint-notice'],
+                        'last-updated-date-hipaa-joint-notice': item.fieldData['last-updated-date-hipaa-joint-notice'],
+                        'consent-to-qhin': item.fieldData['consent-to-qhin'],
+                        'last-updated-date-consent-to-qhin': item.fieldData['last-updated-date-consent-to-qhin'],
                         // Include any additional fields dynamically (except the switch field)
                         ...Object.keys(item.fieldData).reduce((acc, key) => {
-                            if (!['name', 'slug', 'country', 'language', 'body', 'informed-minor-consent-policy', 'terms-of-services', 'last-updated-date-terms-of-services', 'last-updated-date-informed-minor-consent', 'last-updated-date-privacy-policy', 'switch-this-to-yes-if-all-three-docs-are-formatted'].includes(key)) {
+                            if (!['name', 'slug', 'country', 'language', 'body', 'informed-minor-consent-policy', 'terms-of-services', 'last-updated-date-terms-of-services', 'last-updated-date-informed-minor-consent', 'last-updated-date-privacy-policy', 'informed-consent-policy', 'last-updated-date-informed-consent', 'coppa-notice', 'last-updated-date-coppa-notice', 'hipaa-joint-notice', 'last-updated-date-hipaa-joint-notice', 'consent-to-qhin', 'last-updated-date-consent-to-qhin'].includes(key)) {
                                 acc[key] = item.fieldData[key];
                             }
                             return acc;
@@ -179,7 +197,7 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
     }
 
     // Map to selective fields based on docType
-    const mappedDocs = filteredDocs.map(doc => {
+    const mappedDocs = filteredDocs.reduce((acc, doc) => {
         const baseData = {
             name: doc.fieldData.name,
             slug: doc.fieldData.slug,
@@ -187,32 +205,85 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
         };
 
         let specificData: Partial<LegalDocItem['fieldData']> = {};
+        let hasContent = false;
 
         if (docType === 'privacy-policy') {
-            specificData = {
-                'privacy-policy': doc.fieldData.body || "",
-                'last-updated-date-privacy-policy': doc.fieldData['last-updated-date-privacy-policy'] || ""
-            };
+            const content = doc.fieldData.body;
+            if (content) {
+                hasContent = true;
+                specificData = {
+                    'legal-doc': content,
+                    'last-updated-date': doc.fieldData['last-updated-date-privacy-policy'] || ""
+                };
+            }
         } else if (docType === 'informed-minor-consent-policy') {
-            specificData = {
-                'informed-minor-consent-policy': doc.fieldData['informed-minor-consent-policy'] || "",
-                'last-updated-date-informed-minor-consent': doc.fieldData['last-updated-date-informed-minor-consent'] || ""
-            };
+            const content = doc.fieldData['informed-minor-consent-policy'];
+            if (content) {
+                hasContent = true;
+                specificData = {
+                    'legal-doc': content,
+                    'last-updated-date': doc.fieldData['last-updated-date-informed-minor-consent'] || ""
+                };
+            }
         } else if (docType === 'terms-of-services') {
-            specificData = {
-                'terms-of-services': doc.fieldData['terms-of-services'] || "",
-                'last-updated-date-terms-of-services': doc.fieldData['last-updated-date-terms-of-services'] || ""
-            };
+            const content = doc.fieldData['terms-of-services'];
+            if (content) {
+                hasContent = true;
+                specificData = {
+                    'legal-doc': content,
+                    'last-updated-date': doc.fieldData['last-updated-date-terms-of-services'] || ""
+                };
+            }
+        } else if (docType === 'informed-consent-policy') {
+            const content = doc.fieldData['informed-consent-policy'];
+             if (content) {
+                hasContent = true;
+                specificData = {
+                    'legal-doc': content,
+                    'last-updated-date': doc.fieldData['last-updated-date-informed-consent'] || ""
+                };
+            }
+        } else if (docType === 'coppa-notice') {
+            const content = doc.fieldData['coppa-notice'];
+             if (content) {
+                hasContent = true;
+                specificData = {
+                    'legal-doc': content,
+                    'last-updated-date': doc.fieldData['last-updated-date-coppa-notice'] || ""
+                };
+            }
+        } else if (docType === 'hipaa-joint-notice') {
+            const content = doc.fieldData['hipaa-joint-notice'];
+             if (content) {
+                hasContent = true;
+                specificData = {
+                    'legal-doc': content,
+                    'last-updated-date': doc.fieldData['last-updated-date-hipaa-joint-notice'] || ""
+                };
+            }
+        } else if (docType === 'consent-to-qhin') {
+            const content = doc.fieldData['consent-to-qhin'];
+             if (content) {
+                hasContent = true;
+                specificData = {
+                    'legal-doc': content,
+                    'last-updated-date': doc.fieldData['last-updated-date-consent-to-qhin'] || ""
+                };
+            }
         }
 
-        return {
-            id: doc.id,
-            fieldData: {
-                ...baseData,
-                ...specificData
-            }
-        } as LegalDocItem;
-    });
+        if (hasContent) {
+            acc.push({
+                id: doc.id,
+                fieldData: {
+                    ...baseData,
+                    ...specificData
+                }
+            } as LegalDocItem);
+        }
+
+        return acc;
+    }, [] as LegalDocItem[]);
 
     console.log(`After filtering and mapping: ${mappedDocs.length} legal documents (Doc Type: ${docType}).`);
 

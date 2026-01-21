@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
         const excludeByLanguages = searchParams.get('excludeByLanguages') || undefined;
 
         // Validate doc-type
-        const validDocTypes: DocType[] = ['privacy-policy', 'informed-minor-consent-policy', 'terms-of-services'];
+        const validDocTypes: DocType[] = ['privacy-policy', 'informed-minor-consent-policy', 'terms-of-services', 'informed-consent-policy', 'coppa-notice', 'hipaa-joint-notice', 'consent-to-qhin'];
         if (!validDocTypes.includes(docType)) {
             return NextResponse.json(
                 {
