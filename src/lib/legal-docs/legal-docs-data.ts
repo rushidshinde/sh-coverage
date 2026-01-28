@@ -144,7 +144,7 @@ export async function fetchLegalDocsData(options: FetchOptions = {}): Promise<Le
                         'terms-of-services': item.fieldData['terms-of-services'],
                         'last-updated-date-terms-of-services': item.fieldData['last-updated-date-terms-of-services'],
                         'last-updated-date-informed-minor-consent': item.fieldData['last-updated-date-informed-minor-consent'],
-                        'last-updated-date-privacy-policy': item.fieldData['last-updated-date-privacy-policy'],
+                        'last-updated-date-privacy-policy': item.fieldData['last-updated-date'],
                         'informed-consent-policy': item.fieldData['informed-consent-policy'],
                         'last-updated-date-informed-consent': item.fieldData['last-updated-date-informed-consent'],
                         'coppa-notice': item.fieldData['coppa-notice'],
